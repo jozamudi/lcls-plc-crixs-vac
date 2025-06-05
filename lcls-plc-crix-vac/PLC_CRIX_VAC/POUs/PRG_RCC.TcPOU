@@ -11,6 +11,10 @@ VAR
 
     {attribute 'pytmc' :=' pv: CRIXS:RCC:GCP:01:ILK_Setpoint '}
     RCC_GCP_01_INTERLOCK_SETPOINT : REAL := 10;
+	
+	{attribute 'pytmc' :=' pv: CRIXS:RCC'}
+	stRCC_CTL : ST_RCC;
+	fbRCC 	  : FB_RCC;
 
 END_VAR
 
@@ -22,36 +26,33 @@ END_VAR
 RCC_STC_01();
 RCC_STC_02();
 
-(* Valve can open only when CRIX-RCC-VRC-02 and 03 are closed*)
-RCC_VRC_01_OPEN_OK := ( RCC_VRC_02.iq_stValve.i_xClsLS AND NOT RCC_VRC_02.iq_stValve.q_xOPN_DO ) AND
-                                    ( RCC_VRC_03.iq_stValve.i_xClsLS AND NOT RCC_VRC_03.iq_stValve.q_xOPN_DO ) ;
+fbRCC( stRCC_VRC_01:= RCC_VRC_01.iq_stValve,
+	stRCC_VRC_02 := RCC_VRC_02.iq_stValve,
+	stRCC_VRC_03 := RCC_VRC_03.iq_stValve,
+	stRCC_VRC_04 := RCC_VRC_04.iq_stValve,
+	stRCC_GCP_01 := RCC_GCP_01.PG,
+	stRCC_CTL := stRCC_CTL
+);
 
-RCC_VRC_01(i_xExtILK_OK := RCC_VRC_01_OPEN_OK,
+stRCC_CTL.xSystemOverrideMode_RCC := xSystemOverrideMode_RCC;
+	
+
+
+RCC_VRC_01(i_xExtILK_OK := stRCC_CTL.RCC_VRC_01_OPEN_OK,
                 i_xOverrideMode := xSystemOverrideMode_RCC,
                  iq_stValve=> );
 
-(* Valve can open only when CRIX-RCC-VRC-01 and 04 are closed*)
-RCC_VRC_02_OPEN_OK := ( RCC_VRC_01.iq_stValve.i_xClsLS AND NOT RCC_VRC_01.iq_stValve.q_xOPN_DO ) AND
-                                    ( RCC_VRC_04.iq_stValve.i_xClsLS AND NOT RCC_VRC_04.iq_stValve.q_xOPN_DO );
-
-RCC_VRC_02(i_xExtILK_OK := RCC_VRC_02_OPEN_OK,
+RCC_VRC_02(i_xExtILK_OK := stRCC_CTL.RCC_VRC_02_OPEN_OK,
                 i_xOverrideMode := xSystemOverrideMode_RCC,
                  iq_stValve=> );
 
-(* Valve can open only when CRIX-RCC-GCP-01 reading < setpoint Torr and CRIX-RCC-VRC-01 and 04 are closed*)
-RCC_VRC_03_OPEN_OK := (RCC_GCP_01.PG.rPRESS < RCC_GCP_01_INTERLOCK_SETPOINT and RCC_GCP_01.PG.xPRESS_OK ) AND
-                                 ( RCC_VRC_01.iq_stValve.i_xClsLS AND NOT RCC_VRC_01.iq_stValve.q_xOPN_DO ) AND
-                                              ( RCC_VRC_04.iq_stValve.i_xClsLS AND NOT RCC_VRC_04.iq_stValve.q_xOPN_DO );
 
-RCC_VRC_03(i_xExtILK_OK := RCC_VRC_03_OPEN_OK,
+RCC_VRC_03(i_xExtILK_OK := stRCC_CTL.RCC_VRC_03_OPEN_OK,
                 i_xOverrideMode := xSystemOverrideMode_RCC,
                  iq_stValve=> );
 
-(* Valve can open only when CRIX-RCC-VRC-02 and 03 are closed*)
-RCC_VRC_04_OPEN_OK := ( RCC_VRC_02.iq_stValve.i_xClsLS AND NOT RCC_VRC_02.iq_stValve.q_xOPN_DO ) AND
-                                      ( RCC_VRC_03.iq_stValve.i_xClsLS AND NOT RCC_VRC_03.iq_stValve.q_xOPN_DO ) ;
 
-RCC_VRC_04(i_xExtILK_OK := RCC_VRC_04_OPEN_OK,
+RCC_VRC_04(i_xExtILK_OK := stRCC_CTL.RCC_VRC_04_OPEN_OK,
                 i_xOverrideMode := xSystemOverrideMode_RCC,
                  iq_stValve=> );				 ]]></ST>
     </Implementation>

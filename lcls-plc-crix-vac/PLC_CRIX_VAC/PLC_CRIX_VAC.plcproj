@@ -137,6 +137,10 @@
       <DefaultResolution>LCLS General, * (SLAC)</DefaultResolution>
       <Namespace>LCLS_General</Namespace>
     </PlaceholderReference>
+    <PlaceholderReference Include="LCLS Sample Delivery">
+      <DefaultResolution>LCLS Sample Delivery, * (SLAC - LCLS)</DefaultResolution>
+      <Namespace>LCLS_Sample_Delivery</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="LCLS Vacuum">
       <DefaultResolution>LCLS Vacuum, * (SLAC - LCLS)</DefaultResolution>
       <Namespace>LCLS_Vacuum</Namespace>
@@ -174,6 +178,9 @@
   <ItemGroup>
     <PlaceholderResolution Include="LCLS General">
       <Resolution>LCLS General, 2.6.0 (SLAC)</Resolution>
+    </PlaceholderResolution>
+    <PlaceholderResolution Include="LCLS Sample Delivery">
+      <Resolution>LCLS Sample Delivery, * (SLAC - LCLS)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="LCLS Vacuum">
       <Resolution>LCLS Vacuum, 2.3.0 (SLAC - LCLS)</Resolution>
